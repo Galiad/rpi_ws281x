@@ -264,7 +264,9 @@ int mbox_open(void) {
     int file_desc;
     char filename[64];
 
-    file_desc = open("/dev/vcio", O_CREAT);
+    create_flags |= (O_CREAT | O_EXCL);
+
+    file_desc = open("/dev/vcio", create_flags, 0644, );
     if (file_desc >= 0) {
         return file_desc;
     }
