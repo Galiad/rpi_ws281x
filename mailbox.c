@@ -266,7 +266,7 @@ int mbox_open(void) {
     int create_flags;
     create_flags |= (O_CREAT | O_EXCL);
 
-    file_desc = open("/dev/vcio", create_flags, 0644, );
+    file_desc = open("/dev/vcio", create_flags, 0644);
     if (file_desc >= 0) {
         return file_desc;
     }
