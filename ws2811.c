@@ -880,7 +880,6 @@ ws2811_return_t ws2811_init(ws2811_t *ws2811)
     const rpi_hw_t *rpi_hw;
     int chan;
 
-    ws2811->rpi_hw = rpi_hw_detect();
     if (!ws2811->rpi_hw)
     {
         return WS2811_ERROR_HW_NOT_SUPPORTED;
