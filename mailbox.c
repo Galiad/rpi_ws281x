@@ -263,10 +263,8 @@ uint32_t execute_qpu(int file_desc, uint32_t num_qpus, uint32_t control,
 int mbox_open(void) {
     int file_desc;
     char filename[64];
-    int create_flags;
-    create_flags |= (O_CREAT | O_EXCL);
 
-    file_desc = open("/dev/vcio", create_flags, 0644);
+    file_desc = open("/dev/vcio", O_CREAT);
     if (file_desc >= 0) {
         return file_desc;
     }
