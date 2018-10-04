@@ -39,6 +39,8 @@
 
 #define LINE_WIDTH_MAX                           80
 #define HW_VER_STRING                            "Revision"
+#define HW_STRING                                "Hardware"
+#define IMX_Hardware_STRING                      "Freescale i.MX6 Quad/DualLite (Device Tree)"
 
 #define PERIPH_BASE_RPI                          0x20000000
 #define PERIPH_BASE_RPI2                         0x3f000000
@@ -49,7 +51,16 @@
 #define RPI_MANUFACTURER_MASK                    (0xf << 16)
 #define RPI_WARRANTY_MASK                        (0x3 << 24)
 
+static const rpi_hw_t imx_hardwareinfo = {
+    .hwver  = 0,
+        .type = RPI_HWVER_TYPE_PI2,
+        .periph_base = PERIPH_BASE_RPI2,
+        .videocore_base = VIDEOCORE_BASE_RPI2,
+        .desc = "imx",
+    };
+
 static const rpi_hw_t rpi_hw_info[] = {
+
     //
     // Model B Rev 1.0
     //
@@ -333,8 +344,22 @@ const rpi_hw_t *rpi_hw_detect(void)
         return NULL;
     }
 
+
+    char *hardware;
+
+
     while (fgets(line, LINE_WIDTH_MAX - 1, f))
     {
+
+        if(strstr(line, HW_STRING))
+        {
+            char *substr;
+
+
+            substr = strstr(line, ": ");
+            hardware = &substr[1];
+        }
+
         if (strstr(line, HW_VER_STRING))
         {
             uint32_t rev;
@@ -352,6 +377,12 @@ const rpi_hw_t *rpi_hw_detect(void)
             if (errno)
             {
                 continue;
+            }
+
+            if(rev == 0 && strncmp(hardware, IMX_Hardware_STRING, 64))
+            {
+                result = &imx_hardwareinfo;
+                goto done;
             }
 
             for (i = 0; i < (sizeof(rpi_hw_info) / sizeof(rpi_hw_info[0])); i++)
